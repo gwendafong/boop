@@ -1,0 +1,84 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(2, 2, 73);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#game-container {
+    text-align: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: medium;
+}
+
+#instructions {
+    margin-top: 20px;
+}
+
+.gameboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*.gameboard {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(6, 70px);
+    grid-template-rows: repeat(6, 70px);
+    gap: 2px;
+    border: 2px solid black;
+    margin-bottom: 20px;
+}*/
+
+#gameboard {
+    display: grid;
+    align-items: center;
+    width: 400px; /* Adjust width as needed */
+    height: 400px; /* Adjust height as needed */
+    grid-template-columns: repeat(6, 70px);
+    grid-template-rows: repeat(6, 70px);
+    margin: 0 auto; /* Center horizontally */
+    margin-bottom: 30px;
+    border: 2px solid #333; /* Optional: Add a border for better visualization */
+}
+
+.cell {
+    width: 70px;
+    height: 70px;
+    background-color: white;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    color: black;
+}
+
+.cell:hover {
+    cursor: pointer;
+    background-color: lightgray;
+}
+
+#new-game-btn {
+    margin-top: 50px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#new-game-btn:hover {
+    background-color: darkgreen;
+}
+
+#turn-indicator {
+    margin-bottom: 20px;
+}
