@@ -19,6 +19,15 @@ body {
     margin-top: 20px;
 }
 
+@media screen and (max-width: 600px) {
+    #instructions h2,
+    #instructions p {
+        display: block; /* Ensure these elements are displayed as blocks */
+        text-align: center; /* Center-align the text */
+        margin: 10px; /* Add some margin for spacing */
+    }
+}
+
 .gameboard-container {
     display: flex;
     flex-direction: column;
