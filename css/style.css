@@ -25,31 +25,23 @@ body {
     align-items: center;
 }
 
-/*.gameboard {
-    margin-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(6, 70px);
-    grid-template-rows: repeat(6, 70px);
-    gap: 2px;
-    border: 2px solid black;
-    margin-bottom: 20px;
-}*/
+
 
 #gameboard {
     display: grid;
     align-items: center;
-    width: 400px; /* Adjust width as needed */
-    height: 400px; /* Adjust height as needed */
-    grid-template-columns: repeat(6, 70px);
-    grid-template-rows: repeat(6, 70px);
+    width: 300px; /* Adjust width as needed */
+    height: 300px; /* Adjust height as needed */
+    grid-template-columns: repeat(6, 50px);
+    grid-template-rows: repeat(6, 50px);
     margin: 0 auto; /* Center horizontally */
     margin-bottom: 30px;
     border: 2px solid #333; /* Optional: Add a border for better visualization */
 }
 
 .cell {
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     background-color: white;
     border: 1px solid black;
     display: flex;
