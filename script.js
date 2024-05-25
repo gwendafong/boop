@@ -24,6 +24,10 @@ const gameboard = document.getElementById('gameboard');
                 cell.dataset.col = j;
                 cell.innerText = boardState[i][j];
                 cell.addEventListener('click', handleCellClick);
+                /* Highlight winning cells
+                if (winningCells.some(([row, col]) => row === i && col === j)) {
+                    cell.classList.add('winning-cell');
+                }*/
                 gameboard.appendChild(cell);
             }
         }
@@ -40,9 +44,27 @@ const gameboard = document.getElementById('gameboard');
                 renderGameboard();
                 if (checkWin('X')) {
                     message.innerText = `Player X wins!`;
+                    /*const winningPositions = checkWin('X');
+                    if (winningPositions) {
+                        for (const [row, col] of winningPositions) {
+                            if (i === row && j === col) {
+                                cell.classList.add('winning-cell');
+                            }
+                        }
+                    }
+                    renderGameboard();*/
                     gameEnded = true;
                 } else if (checkWin('O')) {
                     message.innerText = `Player O wins!`;
+                    /*const winningPositions = checkWin('O');
+                    if (winningPositions) {
+                        for (const [row, col] of winningPositions) {
+                            if (i === row && j === col) {
+                                cell.classList.add('winning-cell');
+                            }
+                        }
+                    }
+                    renderGameboard();*/
                     gameEnded = true;
                 } else {
                     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
@@ -87,24 +109,24 @@ const gameboard = document.getElementById('gameboard');
                 if (boardState[i][j] === player) {
                     // Check horizontal win
                     if (j + 2 < 6 && boardState[i][j + 1] === player && boardState[i][j + 2] === player) {
-                        return true;
+                        return [[i, j], [i, j + 1], [i, j + 2]];
                     }
                     // Check vertical win
                     if (i + 2 < 6 && boardState[i + 1][j] === player && boardState[i + 2][j] === player) {
-                        return true;
+                        return [[i, j], [i + 1, j], [i + 2, j]];
                     }
                     // Check diagonal win (top-left to bottom-right)
                     if (i + 2 < 6 && j + 2 < 6 && boardState[i + 1][j + 1] === player && boardState[i + 2][j + 2] === player) {
-                        return true;
+                        return [[i, j], [i + 1, j + 1], [i + 2, j + 2]];
                     }
                     // Check diagonal win (top-right to bottom-left)
                     if (i + 2 < 6 && j - 2 >= 0 && boardState[i + 1][j - 1] === player && boardState[i + 2][j - 2] === player) {
-                        return true;
+                        return [[i, j], [i + 1, j - 1], [i + 2, j - 2]];
                     }
                 }
             }
         }
-        return false;
+        return null;
     }
 
     // Event listener for new game button
