@@ -24,10 +24,7 @@ const gameboard = document.getElementById('gameboard');
                 cell.dataset.col = j;
                 cell.innerText = boardState[i][j];
                 cell.addEventListener('click', handleCellClick);
-                /* Highlight winning cells
-                if (winningCells.some(([row, col]) => row === i && col === j)) {
-                    cell.classList.add('winning-cell');
-                }*/
+                  
                 gameboard.appendChild(cell);
             }
         }
@@ -42,29 +39,17 @@ const gameboard = document.getElementById('gameboard');
                 boardState[row][col] = currentPlayer;
                 boopTokens(row, col);
                 renderGameboard();
-                if (checkWin('X')) {
+
+                
+                if (checkWin('X')) { 
+                    const winningXCells=checkWin('X'); //added this
+                    highlightWinningCells(winningXCells); //added this
                     message.innerText = `Player X wins!`;
-                    /*const winningPositions = checkWin('X');
-                    if (winningPositions) {
-                        for (const [row, col] of winningPositions) {
-                            if (i === row && j === col) {
-                                cell.classList.add('winning-cell');
-                            }
-                        }
-                    }
-                    renderGameboard();*/
                     gameEnded = true;
-                } else if (checkWin('O')) {
+                } else if (checkWin('O')) { 
+                    const winningOCells=checkWin('O'); //added this
+                    highlightWinningCells(winningOCells); //added this
                     message.innerText = `Player O wins!`;
-                    /*const winningPositions = checkWin('O');
-                    if (winningPositions) {
-                        for (const [row, col] of winningPositions) {
-                            if (i === row && j === col) {
-                                cell.classList.add('winning-cell');
-                            }
-                        }
-                    }
-                    renderGameboard();*/
                     gameEnded = true;
                 } else {
                     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
@@ -128,6 +113,14 @@ const gameboard = document.getElementById('gameboard');
         }
         return null;
     }
+
+    // Function to highlight winning cells
+    function highlightWinningCells(cells) {
+    cells.forEach(([row, col]) => {
+        const cell = gameboard.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+        cell.classList.add('winning-cell');
+    });
+}
 
     // Event listener for new game button
     newGameBtn.addEventListener('click', () => {
