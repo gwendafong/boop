@@ -1,74 +1,76 @@
 const gameboard = document.getElementById('gameboard');
-const message = document.getElementById('message');
-const newGameBtn = document.getElementById('new-game-btn');
-const turnIndicator = document.getElementById('turn-indicator');
-let currentPlayer = 'X';
-let boardState = [
-    ['', '', '', '', '', ''],
-    ['', '', '', '', '', ''],
-    ['', '', '', '', '', ''],
-    ['', '', '', '', '', ''],
-    ['', '', '', '', '', ''],
-    ['', '', '', '', '', '']
-];
-let gameEnded = false;
+    const message = document.getElementById('message');
+    const newGameBtn = document.getElementById('new-game-btn');
+    const turnIndicator = document.getElementById('turn-indicator');
+    let currentPlayer = 'X';
+    let boardState = [
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', '']
+    ];
+    let gameEnded = false;
 
-// Function to render the gameboard
-function renderGameboard(row = 10, col = 10) {
-    gameboard.innerHTML = '';
-    for (let i = 0; i < 6; i++) {
-        for (let j = 0; j < 6; j++) {
-            const cell = document.createElement('div');
-            cell.classList.add('cell');
-            cell.dataset.row = i;
-            cell.dataset.col = j;
-            if (i === row && j === col) {
-                cell.style.backgroundColor = "yellow"
+    // Function to render the gameboard
+    function renderGameboard() {
+        gameboard.innerHTML = '';
+        for (let i = 0; i < 6; i++) {
+            for (let j = 0; j < 6; j++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.dataset.row = i;
+                cell.dataset.col = j;
+                if (i === row && j === col) {
+                    cell.style.backgroundColor = "yellow"
+                }
+                cell.innerText = boardState[i][j];
+                cell.addEventListener('click', handleCellClick);
+                  
+                gameboard.appendChild(cell);
             }
-            cell.innerText = boardState[i][j];
-            cell.addEventListener('click', handleCellClick);
-            gameboard.appendChild(cell);
         }
     }
-}
 
-// Function to handle cell click event
-function handleCellClick(event) {
-    if (!gameEnded) {
-        const row = parseInt(event.target.dataset.row);
-        const col = parseInt(event.target.dataset.col);
-        if (boardState[row][col] === '') {
-            boardState[row][col] = currentPlayer;
-            boopTokens(row, col);
-            renderGameboard();
-            if (checkWin('X')) { 
-                const winningXCells=checkWin('X'); //added this
-                highlightWinningCells(winningXCells); //added this
-                message.innerText = `Player X wins!`;
-                gameEnded = true;
-            } else if (checkWin('O')) { 
-                const winningOCells=checkWin('O'); //added this
-                highlightWinningCells(winningOCells); //added this
-                message.innerText = `Player O wins!`;
-                gameEnded = true;
-            } else {
-                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                updateTurnIndicator();
-                if (difficulty) {
-                    AI_move(difficulty) // Determines the type of AI
+    // Function to handle cell click event
+    function handleCellClick(event) {
+        if (!gameEnded) {
+            const row = parseInt(event.target.dataset.row);
+            const col = parseInt(event.target.dataset.col);
+            if (boardState[row][col] === '') {
+                boardState[row][col] = currentPlayer;
+                boopTokens(row, col);
+                renderGameboard();
+
+                
+                if (checkWin('X')) { 
+                    const winningXCells=checkWin('X'); //added this
+                    highlightWinningCells(winningXCells); //added this
+                    message.innerText = `Player X wins!`;
+                    gameEnded = true;
+                } else if (checkWin('O')) { 
+                    const winningOCells=checkWin('O'); //added this
+                    highlightWinningCells(winningOCells); //added this
+                    message.innerText = `Player O wins!`;
+                    gameEnded = true;
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    updateTurnIndicator();
+                    if (difficulty) {
+                        AI_move(difficulty) // Determines the type of AI
+                    }
                 }
             }
         }
     }
-}
+
+//new code here
 
 //Difficulty Selection
 let difficulty = AI_Terminator
 function dropdown() {
     var selector = document.getElementById("difficulty");
-    /*if(selector.value == "baby"){
-        difficulty = AI_Baby
-    }*/
     if(selector.value == "normal"){
         difficulty = AI_Normal
     }
@@ -90,17 +92,13 @@ function AI_move(difficulty) {
             boardState[row][col] = currentPlayer;
             boopTokens(row, col);
             renderGameboard(row,col);
-            if (checkWin('X')) { 
-                const winningXCells=checkWin('X'); //added this
-                highlightWinningCells(winningXCells); //added this
+            if (checkWin('X')) {
                 message.innerText = `Player X wins!`;
                 gameEnded = true;
-            } else if (checkWin('O')) { 
-                const winningOCells=checkWin('O'); //added this
-                highlightWinningCells(winningOCells); //added this
+            } else if (checkWin('O')) {
                 message.innerText = `Player O wins!`;
                 gameEnded = true;
-            }  else {
+            } else {
                 currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
                 updateTurnIndicator();
             }
@@ -114,17 +112,6 @@ function rand(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
     }
 
-/* AI Heuristic - Baby (random moves)
-function AI_Baby() {
-    const row = rand(0,5)
-    const col = rand(0,5)
-    while (boardState[row][col] !== "") {
-        const [row,col] = AI_Baby() //catches AI trying to place on occupied cell
-        return [row,col]
-    }
-    // console.log("Muahhhhhh")
-    return [row,col]
-}*/
 
 // Updating boardstate to calculate utility
 function Calc_Utility(board,row = null, col = null) {
@@ -174,7 +161,6 @@ function Calc_Utility(board,row = null, col = null) {
 
                 utility += 30 // more pieces on the board is marginally better
 
-                // console.log(utility)
             }
             
             //CheckLose
@@ -227,13 +213,10 @@ function Calc_Utility(board,row = null, col = null) {
                 if ((i === 2 || i === 3) && (j === 2 || j === 3)) {
                     utility -= 16
                 }
-                // console.log(utility)
             }
             
         }
     }
-    // board_util[i][j] = utility
-    // console.log(utility)
     return utility
 
 }
@@ -245,11 +228,8 @@ function AI_Normal() {
     for (let i = 0; i < 6; i++) {
         for (let j = 0; j < 6; j++) {
             if (boardState[i][j] !== "") {continue} // skips occupied
-            // console.log(max_utility)
             // makes a new move and returns new boardstate
             let new_board = AIboopTokens(i,j,JSON.parse(JSON.stringify(boardState)))
-            // console.log("coord: " + i + "," + j)
-            // console.log(new_board)
             let new_utility = Calc_Utility(new_board,i,j)
             if (new_utility > max_utility) {
                 best_move = [i,j]
@@ -258,14 +238,12 @@ function AI_Normal() {
 
         }
     }
-    // console.log(best_move)
     return best_move
 }
 
 //AI Heuristic - Terminator (minimax; alpha-beta pruning; 5-step but might crash)
 function AI_Terminator() {
     let [utility,best_moves] = minimax(boardState,4,-99999,99999,true)
-    // console.log("terminator:" + utility,best_moves)
     return best_moves.slice(-1).pop()
 }
 
@@ -276,9 +254,6 @@ function move_gen() {
             moves.push([i,j])
         }
     }
-    // moves.sort(function (a, b) {
-    //     return Math.random() - 0.5;
-    // });
     return moves
 }
 
@@ -288,24 +263,24 @@ function AI_checkWin(board,player) {
             if (board[i][j] === player) {
                 // Check horizontal win
                 if (j + 2 < 6 && board[i][j + 1] === player && board[i][j + 2] === player) {
-                    return [[i, j], [i, j + 1], [i, j + 2]];
+                    return true;
                 }
                 // Check vertical win
                 if (i + 2 < 6 && board[i + 1][j] === player && board[i + 2][j] === player) {
-                    return [[i, j], [i + 1, j], [i + 2, j]];
+                    return true;
                 }
                 // Check diagonal win (top-left to bottom-right)
                 if (i + 2 < 6 && j + 2 < 6 && board[i + 1][j + 1] === player && board[i + 2][j + 2] === player) {
-                    return [[i, j], [i + 1, j + 1], [i + 2, j + 2]];
+                    return true;
                 }
                 // Check diagonal win (top-right to bottom-left)
                 if (i + 2 < 6 && j - 2 >= 0 && board[i + 1][j - 1] === player && board[i + 2][j - 2] === player) {
-                    return [[i, j], [i + 1, j - 1], [i + 2, j - 2]];
+                    return true;
                 }
             }
         }
     }
-    return null;
+    return false;
 }
 
 function minimax(board, depth, alpha, beta, AI) {
@@ -341,10 +316,6 @@ function minimax(board, depth, alpha, beta, AI) {
                 break
             }
         }
-        // if (best_move) {
-        //     best_moves.push(best_move)
-        // }
-        // console.log("bestest:" + utility,best_moves)
         best_moves.push(best_move)
         return [utility, best_moves]
     } 
@@ -369,121 +340,120 @@ function minimax(board, depth, alpha, beta, AI) {
                 break
             }
         }
-
         best_moves.push(best_move)
         return [utility, best_moves]
     }
 }
 
-// Function to update turn indicator
-function updateTurnIndicator() {
-    turnIndicator.innerText = `Current Turn: Player ${currentPlayer}`;
-}
 
-function AIboopTokens(row, col,board,AI = true) {
-    const directions = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];
-    if (AI) {
-        board[row][col] = "O";
-    } else {
-        board[row][col] = "X"
+    // Function to update turn indicator
+    function updateTurnIndicator() {
+        turnIndicator.innerText = `Current Turn: Player ${currentPlayer}`;
     }
-    
-    for (const [dx, dy] of directions) {
-        let x = row + dx;
-        let y = col + dy;
-        if (x >= 0 && x < 6 && y >= 0 && y < 6 && board[x][y] !== '') {
-            let nx = x + dx;
-            let ny = y + dy;
-            if (nx >= 0 && nx < 6 && ny >= 0 && ny < 6) {
-                if (board[nx][ny] === '') {
-                    board[nx][ny] = board[x][y];
-                    board[x][y] = '';
-                }
-            } else {
-                // Token to be booped is adjacent to the edge of the board
-                board[x][y] = '';
-            }
-        }
-    }
-    return board
-}
 
-// Function to boop tokens
-function boopTokens(row, col) {
-    const directions = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];
-    for (const [dx, dy] of directions) {
-        let x = row + dx;
-        let y = col + dy;
-        if (x >= 0 && x < 6 && y >= 0 && y < 6 && boardState[x][y] !== '') {
-            let nx = x + dx;
-            let ny = y + dy;
-            if (nx >= 0 && nx < 6 && ny >= 0 && ny < 6) {
-                if (boardState[nx][ny] === '') {
-                    boardState[nx][ny] = boardState[x][y];
+    // Function to boop tokens
+    function boopTokens(row, col) {
+        const directions = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];
+        for (const [dx, dy] of directions) {
+            let x = row + dx;
+            let y = col + dy;
+            if (x >= 0 && x < 6 && y >= 0 && y < 6 && boardState[x][y] !== '') {
+                let nx = x + dx;
+                let ny = y + dy;
+                if (nx >= 0 && nx < 6 && ny >= 0 && ny < 6) {
+                    if (boardState[nx][ny] === '') {
+                        boardState[nx][ny] = boardState[x][y];
+                        boardState[x][y] = '';
+                    }
+                } else {
+                    // Token to be booped is adjacent to the edge of the board
                     boardState[x][y] = '';
                 }
-            } else {
-                // Token to be booped is adjacent to the edge of the board
-                boardState[x][y] = '';
             }
         }
     }
-}
 
-// Function to check for a win
-function checkWin(player) {
-    // Check horizontal, vertical, and diagonal wins
-    for (let i = 0; i < 6; i++) {
-        for (let j = 0; j < 6; j++) {
-            if (boardState[i][j] === player) {
-                // Check horizontal win
-                if (j + 2 < 6 && boardState[i][j + 1] === player && boardState[i][j + 2] === player) {
-                    return [[i, j], [i, j + 1], [i, j + 2]];
-                }
-                // Check vertical win
-                if (i + 2 < 6 && boardState[i + 1][j] === player && boardState[i + 2][j] === player) {
-                    return [[i, j], [i + 1, j], [i + 2, j]];
-                }
-                // Check diagonal win (top-left to bottom-right)
-                if (i + 2 < 6 && j + 2 < 6 && boardState[i + 1][j + 1] === player && boardState[i + 2][j + 2] === player) {
-                    return [[i, j], [i + 1, j + 1], [i + 2, j + 2]];
-                }
-                // Check diagonal win (top-right to bottom-left)
-                if (i + 2 < 6 && j - 2 >= 0 && boardState[i + 1][j - 1] === player && boardState[i + 2][j - 2] === player) {
-                    return [[i, j], [i + 1, j - 1], [i + 2, j - 2]];
+    function AIboopTokens(row, col,board,AI = true) {
+        const directions = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];
+        if (AI) {
+            board[row][col] = "O";
+        } else {
+            board[row][col] = "X"
+        }
+        
+        for (const [dx, dy] of directions) {
+            let x = row + dx;
+            let y = col + dy;
+            if (x >= 0 && x < 6 && y >= 0 && y < 6 && board[x][y] !== '') {
+                let nx = x + dx;
+                let ny = y + dy;
+                if (nx >= 0 && nx < 6 && ny >= 0 && ny < 6) {
+                    if (board[nx][ny] === '') {
+                        board[nx][ny] = board[x][y];
+                        board[x][y] = '';
+                    }
+                } else {
+                    // Token to be booped is adjacent to the edge of the board
+                    board[x][y] = '';
                 }
             }
         }
+        return board
     }
-    return null;
-}
+
+    // Function to check for a win
+    function checkWin(player) {
+        // Check horizontal, vertical, and diagonal wins
+        for (let i = 0; i < 6; i++) {
+            for (let j = 0; j < 6; j++) {
+                if (boardState[i][j] === player) {
+                    // Check horizontal win
+                    if (j + 2 < 6 && boardState[i][j + 1] === player && boardState[i][j + 2] === player) {
+                        return [[i, j], [i, j + 1], [i, j + 2]];
+                    }
+                    // Check vertical win
+                    if (i + 2 < 6 && boardState[i + 1][j] === player && boardState[i + 2][j] === player) {
+                        return [[i, j], [i + 1, j], [i + 2, j]];
+                    }
+                    // Check diagonal win (top-left to bottom-right)
+                    if (i + 2 < 6 && j + 2 < 6 && boardState[i + 1][j + 1] === player && boardState[i + 2][j + 2] === player) {
+                        return [[i, j], [i + 1, j + 1], [i + 2, j + 2]];
+                    }
+                    // Check diagonal win (top-right to bottom-left)
+                    if (i + 2 < 6 && j - 2 >= 0 && boardState[i + 1][j - 1] === player && boardState[i + 2][j - 2] === player) {
+                        return [[i, j], [i + 1, j - 1], [i + 2, j - 2]];
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     // Function to highlight winning cells
     function highlightWinningCells(cells) {
-        cells.forEach(([row, col]) => {
-            const cell = gameboard.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-            cell.classList.add('winning-cell');
-        });
-    }
+    cells.forEach(([row, col]) => {
+        const cell = gameboard.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+        cell.classList.add('winning-cell');
+    });
+}
 
-// Event listener for new game button
-newGameBtn.addEventListener('click', () => {
-    currentPlayer = 'X';
-    boardState = [
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', '']
-    ];
-    gameEnded = false;
-    message.innerText = '';
-    turnIndicator.innerText = '';
+    // Event listener for new game button
+    newGameBtn.addEventListener('click', () => {
+        currentPlayer = 'X';
+        boardState = [
+            ['', '', '', '', '', ''],
+            ['', '', '', '', '', ''],
+            ['', '', '', '', '', ''],
+            ['', '', '', '', '', ''],
+            ['', '', '', '', '', ''],
+            ['', '', '', '', '', '']
+        ];
+        gameEnded = false;
+        message.innerText = '';
+        turnIndicator.innerText = '';
+        renderGameboard();
+        updateTurnIndicator();
+    });
+
     renderGameboard();
     updateTurnIndicator();
-});
-
-
-renderGameboard();
-updateTurnIndicator();
