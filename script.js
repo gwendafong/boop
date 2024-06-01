@@ -88,8 +88,9 @@ function AI_move(difficulty) {
         let col = coord[1];
         if (boardState[row][col] === '') {
             boardState[row][col] = currentPlayer;
-            boopTokens(row, col);
             renderGameboard(row,col);
+            setTimeout(boopTokens(row, col), 20000);
+            setTimeout(renderGameboard(row,col), 2000);
             if (checkWin('X')) { 
                 const winningXCells=checkWin('X'); //added this
                 highlightWinningCells(winningXCells); //added this
